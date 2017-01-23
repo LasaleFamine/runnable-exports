@@ -10,17 +10,14 @@ If you want to easly create a command line tool from a file and a bunch of expor
 	$ yarn add runnable-exports
 
 ## Usage
-	```javascript
-	// your-file.js
-
-	const runnableExports = require('runnable-exports')
-
-	module.exports.awesome = args => {
-		console.log('Awesome', args)
-	}
-
-	runnableExports()
-	```
+```javascript
+// your-file.js
+const runnableExports = require('runnable-exports')
+module.exports.awesome = args => {
+	console.log('Awesome', args)
+}
+runnableExports()
+```
 And simply
 
 	$ node your-file.js awesome and nice arguments
