@@ -3,31 +3,23 @@ const argv = require('yargs').argv
 
 const helpers = {}
 
-helpers.isFunc = target => {
-	return target instanceof Function
-}
+helpers.isFunc = target => target instanceof Function
 helpers.getObjectArgs = argv => {
 	const args = Object.assign({}, argv)
 	delete args.$0
 	delete args._
 	return args
 }
-helpers.isExecutable = (targetFunc, parentExports) => {
-	return targetFunc in parentExports && helpers.isFunc(parentExports[targetFunc])
-}
-helpers.hasBothTypesOfArg = (objectArgs, arrayArgs) => {
-	return Object.keys(objectArgs).length > 0 && arrayArgs.length > 0
-}
+
+helpers.isExecutable = (targetFunc, parentExports) => targetFunc in parentExports && helpers.isFunc(parentExports[targetFunc])
+helpers.hasBothTypesOfArg = (objectArgs, arrayArgs) => Object.keys(objectArgs).length > 0 && arrayArgs.length > 0
 helpers.getAndRun = (func, objectArgs, arrayArgs) => {
 	const targetArgs = helpers._getCurrentArgs(objectArgs, arrayArgs)
 	return helpers._runFunc(func, targetArgs)
 }
-helpers._getCurrentArgs = (objectArgs, arrayArgs) => {
-	return Object.keys(objectArgs).length > arrayArgs.length ? objectArgs : arrayArgs
-}
-helpers._runFunc = (func, args) => {
-	func(args)
-}
+
+helpers._getCurrentArgs = (objectArgs, arrayArgs) => Object.keys(objectArgs).length > arrayArgs.length ? objectArgs : arrayArgs
+helpers._runFunc = (func, args) => func(args)
 
 const main = () => {
 	const parent = module.parent
