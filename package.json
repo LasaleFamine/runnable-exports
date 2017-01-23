@@ -23,8 +23,11 @@
     "runnable",
     "runnable-exports",
     "exports",
+    "module",
+    "export"
     "run",
-    "run exports",
+    "function",
+    "func"
     "exec",
     "execute"
   ],
