@@ -38,6 +38,12 @@ Output
 
 > :warning: NOTE: the module currently doesn't accept **both types of arguments**
 
+## Test
+
+> XO and AVA
+
+	$ yarn test
+
 ## Related
 
 This is a fork of [make-runnable](https://github.com/super-cache-money/make-runnable)
