@@ -1,0 +1,44 @@
+{
+  "name": "runnable-exports",
+  "version": "0.1.0",
+  "description": "Call exports module from command line.",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "test": "xo && ava"
+  },
+  "xo": {
+    "semicolon": false,
+    "envs": [
+      "node"
+    ],
+    "ignores": [
+      "test.js",
+      "*.spec.js"
+    ]
+  },
+  "keywords": [
+    "runnable",
+    "runnable-exports",
+    "exports",
+    "run",
+    "run exports",
+    "exec",
+    "execute"
+  ],
+  "repository": "https://github.com/lasalefamine/runnable-exports",
+  "author": {
+    "name": "LasaleFamine",
+    "email": "info@godev.space"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "ava": "^0.17.0",
+    "xo": "^0.17.1"
+  },
+  "dependencies": {
+    "yargs": "^6.6.0"
+  }
+}
