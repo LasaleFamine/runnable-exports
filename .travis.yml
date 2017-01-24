@@ -3,5 +3,5 @@ language: node_js
 node_js:
   - 'node'
   - '6'
-after_success:
-    - './node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls'
+script:
+  - xo && nyc ava && nyc report --reporter=text-lcov | coveralls
