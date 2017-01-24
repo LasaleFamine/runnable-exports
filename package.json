@@ -1,6 +1,6 @@
 {
   "name": "runnable-exports",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Call exports module from command line.",
   "main": "src/index.js",
   "engines": {
