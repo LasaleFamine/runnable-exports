@@ -30,7 +30,7 @@ const main = () => {
 
 	// Check for others `runnable-exports`
 	if (require.main !== parent) {
-		return delete require.cache(__filename)
+		return delete require.cache[__filename]
 	}
 
 	const parentExports = parent.exports

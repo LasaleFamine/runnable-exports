@@ -7,7 +7,7 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "test": "xo && ava",
+    "test": "xo && nyc ava",
     "report": "nyc report --reporter=html",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
@@ -18,7 +18,7 @@
     ],
     "ignores": [
       "test.js",
-      "*.spec.js"
+      "testfiles/*.spec.js"
     ]
   },
   "keywords": [

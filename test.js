@@ -54,5 +54,8 @@ test('work with func export (object args)', async t => {
 	t.is(stdout, '{ asd: true }')
 })
 
-
+test('nested runnable-exports', async t => {
+	const stdout = (await execa('node', ['./testfiles/nested.spec.js', 'test', '--asd'])).stdout
+	t.is(stdout, 'cache deleted')
+})
 
