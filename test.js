@@ -71,3 +71,27 @@ test('nested runnable-exports', async t => {
 	const stdout = (await execa('node', ['./testfiles/nested.spec.js', 'test', '--asd'])).stdout
 	t.is(stdout, 'cache deleted')
 })
+
+test('Function args are not passed as an array', async t => {
+	const functionName = 'otherFunction';
+	const functionArgs = ['foo', 'bar', 'baz'];
+	const stdout = (await execa('node', ['./testfiles/multiple-exports.spec.js', 'otherFunction', ...functionArgs]))
+
+	t.is(stdout, 'Inserting bar at index foo with type baz');
+});
+
+
+test('Function args can be combined into array', async t => {
+	const stdout = (await execa('node', ['./testfiles/multiple-exports.spec.js', 'testFunction', 'arg1', 'arg2', 'arg3', 'arg4']));
+	t.is(stdout, '4 arguments entered');
+});
+
+test('Function can count array of 0 args', async t => {
+	const stdout = (await execa('node', ['./testfiles/multiple-exports.spec.js', 'testFunction']));
+	t.is(stdout, '0 arguments entered');
+});
+
+test('Funnction can count array with 1 arg', async t => {
+	const stdout = (await execa('node', ['./testfiles/multiple-exports.spec.js', 'testFunction', 'arg']));
+	t.is(stdout, '1 arguments entered');
+});

@@ -4,12 +4,12 @@ const PI = 3;
 const variable = "my variable";
 
 const testFunction = (...args) => {
+
     console.log(`${args.length} arguments entered.`);
 }
 
-const otherFunction = (key, value, object) => {
-    console.log(`Inserting ${value} into ${object} at ${key}`);
-    object[key] = value;
+const otherFunction = (key, value, type) => {
+    console.log(`Inserting ${value} at index ${key} with type ${type}`);
 }
 
 module.exports = {
