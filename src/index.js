@@ -18,6 +18,32 @@ helpers.getAndRun = (func, objectArgs, arrayArgs) => {
 	return helpers._runFunc(func, targetArgs)
 }
 
+helpers.getFunctionNames = (object) => {
+	const objectFunctionNames = [];
+	for (let key in object) {
+		let objectProperty = object[key];
+
+		if (helpers.isFunc(objectProperty)) {
+			objectFunctionNames.push(key);
+		}
+	}
+
+	return objectFunctionNames;
+}
+
+helpers.generateSuggestion = (functionNames) => {
+	let suggestion = "";
+	let functionListString = functionNames.join(", ");
+	if (functionNames.length > 1) {
+		suggestion = `Perhaps you meant one of the following: ${functionListString}`;
+	} else if (functionNames.length === 1) {
+		suggestion = `Perhaps you meant: ${functionListString}`;
+	} else {
+		suggestion = `Module doesn't export any functions`;
+	}
+	return suggestion;
+}
+
 helpers._getCurrentArgs = (objectArgs, arrayArgs) => Object.keys(objectArgs).length > arrayArgs.length ? objectArgs : arrayArgs
 helpers._runFunc = (func, args) => func(args)
 
@@ -49,9 +75,12 @@ const main = () => {
 	const isExecutable = helpers.isExecutable(targetFunc, parentExports)
 	if (isExecutable) {
 		return helpers.getAndRun(parentExports[targetFunc], objectArgs, args.slice(1))
+	} else {
+		let executableFunctions = helpers.getFunctionNames(parentExports);
+		let suggestionString = helpers.generateSuggestion(executableFunctions);
+		let errorMessage = `RUNNABLE-EXPORTS: can't run your command: ${targetFunc} \n${suggestionString}`;
+		throw new Error(errorMessage);
 	}
-
-	throw new Error(`RUNNABLE-EXPORTS: can't run your command: ${targetFunc}`)
 }
 
 module.exports = main
