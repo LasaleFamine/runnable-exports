@@ -3,7 +3,7 @@
 
 > Run your `exports` as command line arguments
 
-If you want to easly create a command line tool from a file and a bunch of exported functions.
+If you want to easily create a command line tool from a file and a bunch of exported functions.
 
 ## Install
 
@@ -13,7 +13,7 @@ If you want to easly create a command line tool from a file and a bunch of expor
 ```javascript
 // your-file.js
 const runnableExports = require('runnable-exports')
-module.exports.awesome = args => {
+module.exports.awesome = ...args => {
 	console.log('Awesome', args)
 }
 runnableExports()
@@ -27,8 +27,16 @@ Output
 	Awesome ['and', 'nice', 'arguments']
 
 ### ***ObjectArgs***
+```javascript
+// your-file.js
+const runnableExports = require('runnable-exports')
+module.exports.awesome = args => {
+	console.log('Awesome', args)
+}
+runnableExports()
+```
 
-Underthehood is used [yargs](https://www.npmjs.com/package/yargs), so you can pass easly also `objectArgs` like so
+Under the hood [yargs](https://www.npmjs.com/package/yargs) is used, so you can pass easily also `objectArgs` like so
 
 	$ node your-file.js awesome --nice
 
@@ -36,7 +44,7 @@ Output
 
 	Awesome {nice: true}
 
-> :warning: NOTE: the module currently doesn't accept **both types of arguments**
+> NOTE: the module accepts both types of args, the object args will be the first arg passed to the called function, all other args will follow from this
 
 ## Test
 

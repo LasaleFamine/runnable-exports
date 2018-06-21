@@ -1,6 +1,6 @@
 const runnableExports = require('./../src/index.js')
 
-module.exports = testArgs => {
+module.exports = (...testArgs) => {
 	console.log(testArgs)
 }
 
