@@ -1,5 +1,5 @@
 # runnable-exports
-[![Build Status](https://travis-ci.org/LasaleFamine/runnable-exports.svg?branch=master)](https://travis-ci.org/LasaleFamine/runnable-exports) [![Coverage Status](https://coveralls.io/repos/github/LasaleFamine/runnable-exports/badge.svg)](https://coveralls.io/github/LasaleFamine/runnable-exports)
+[![Build Status](https://travis-ci.org/emurphy-9/runnable-exports.svg?branch=master)](https://travis-ci.org/emurphy-9/runnable-exports) [![Coverage Status](https://coveralls.io/repos/github/emurphy-9/runnable-exports/badge.svg)](https://coveralls.io/github/emurphy-9/runnable-exports)
 
 > Run your `exports` as command line arguments
 
