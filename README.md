@@ -1,6 +1,5 @@
 # runnable-exports
-[![Build Status](https://travis-ci.org/emurphy-9/runnable-exports.svg?branch=master)](https://travis-ci.org/emurphy-9/runnable-exports) [![Coverage Status](https://coveralls.io/repos/github/emurphy-9/runnable-exports/badge.svg)](https://coveralls.io/github/emurphy-9/runnable-exports)
-
+[![Build Status](https://travis-ci.com/emurphy-9/runnable-exports.svg?branch=master)](https://travis-ci.com/emurphy-9/runnable-exports) [![Coverage Status](https://coveralls.io/repos/github/emurphy-9/runnable-exports/badge.svg?branch=master)](https://coveralls.io/github/emurphy-9/runnable-exports?branch=master)
 > Run your `exports` as command line arguments
 
 If you want to easily create a command line tool from a file and a bunch of exported functions.
