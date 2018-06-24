@@ -1,32 +1,55 @@
-import test from 'ava'
-import execa from 'execa'
+import test from 'ava';
+import execa from 'execa';
+
+const testfileDir = './testfiles';
+const testfileExtension = '.spec.js';
+const generalErrorMessage = 'Error: RUNNABLE-EXPORTS: can\'t run your command: ';
+
+const exec = async (filename, ...args) => {
+	const filepath = `${testfileDir}/${filename}${testfileExtension}`;
+	return execa('node', [filepath, ...args]);
+};
+
+const checkError = async (t, stringsToCheck, ...execArgs) => {
+	const error = (await t.throws(exec(...execArgs))).stderr;
+	for (const string in stringsToCheck) {
+		t.true(error.includes(string));
+	}
+}
+
+const checkSuccess = async (t, expectedOutput, ...execArgs) => {
+	const output = (await exec(...execArgs)).stdout;
+	t.is(output, expectedOutput);
+};
 
 test('throw with no exported func calling only the file', async t => {
-	const error = await t.throws(execa('node', ['./testfiles/noexport.spec.js']))
-	const msg = `Error: RUNNABLE-EXPORTS: can't run your command: `;
-	const suggestion = `Module doesn't export any functions`;
-  t.true(error.stderr.includes(msg));
-  t.true(error.stderr.includes(suggestion));
-})
+	const file = 'noexport';
+	const suggestion = 'Module doesn\'t export any functions';
+	await checkError(t, [generalErrorMessage, suggestion], file);
+});
 
 test('works with default exported func calling with double type args', async t => {
-	const stdout = (await execa('node', ['./testfiles/defaultexport.spec.js', 'asd', '--asd'])).stdout;
+	const file = 'defaultexport';
+	const testArgs = ['asd', '--asd'];
 	const expectedOutput = `[ { asd: true }, 'asd' ]`;
-  t.is(stdout, expectedOutput);
-})
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
+});
 
 test('throw with exported func calling with a wrong name', async t => {
-	const error = await t.throws(execa('node', ['./testfiles/export.spec.js', 'asd']))
-	const msg = `Error: RUNNABLE-EXPORTS: can't run your command: asd`;
-	const suggestion = `Perhaps you meant: test`;
-  t.true(error.stderr.includes(msg));
-  t.true(error.stderr.includes(suggestion));
+	const file = 'export';
+	const testArgs = ['asd'];
+	const errorMessage = `${generalErrorMessage}asd`;
+	const suggestion = 'Perhaps you meant: test';
+
+	await checkError(t, [errorMessage, suggestion], file, ...testArgs);
 })
 
 test('works with exported func calling with double type args', async t => {
-  const stdout = (await execa('node', ['./testfiles/export.spec.js', 'test', 'asdasd', '--asd'])).stdout;
+  const file = 'export';
+  const testArgs = ['test', 'asdasd', '--asd'];
   const expectedOutput = `[ { asd: true }, 'asdasd' ]`;
-  t.is(stdout, expectedOutput);
+
+  await checkSuccess(t, expectedOutput, file, ...testArgs);
 })
 
 test('throw with func calling wrong name suggests valid function names', async t => {
@@ -38,71 +61,108 @@ test('throw with func calling wrong name suggests valid function names', async t
 })
 
 test('work with default export (no-args)', async t => {
-	const stdout = (await execa('node', ['./testfiles/defaultexport.spec.js'])).stdout
-	t.is(stdout, '[]')
-})
+	const file = 'defaultexport';
+	const testArgs = [];
+	const expectedOutput = '[]';
+
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
+});
 
 test('work with default export (normal args)', async t => {
-	const stdout = (await execa('node', ['./testfiles/defaultexport.spec.js', 'test'])).stdout
-	t.is(stdout, `[ 'test' ]`)
-})
+	const file = 'defaultexport';
+	const testArgs = ['test'];
+	const expectedOutput = '[ \'test\' ]';
+
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
+});
 
 test('work with default export (object args as array)', async t => {
-	const stdout = (await execa('node', ['./testfiles/defaultexport.spec.js', '--test'])).stdout
-	t.is(stdout, '[ { test: true } ]')
-})
+	const file = 'defaultexport';
+	const testArgs = ['--test'];
+	const expectedOutput = '[ { test: true } ]';
+
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
+});
 
 test('work with func export (no-args)', async t => {
-	const stdout = (await execa('node', ['./testfiles/export.spec.js', 'test'])).stdout
-	t.is(stdout, '[]')
-})
+	const file = 'export';
+	const testArgs = ['test'];
+	const expectedOutput = '[]';
+
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
+});
 
 test('work with func export (normal args)', async t => {
-	const stdout = (await execa('node', ['./testfiles/export.spec.js', 'test', 'asd'])).stdout
-	t.is(stdout, `[ 'asd' ]`)
-})
+	const file = 'export';
+	const testArgs = ['test', 'asd'];
+	const expectedOutput = '[ \'asd\' ]';
+
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
+});
 
 test('work with func export (object args)', async t => {
-	const stdout = (await execa('node', ['./testfiles/multiple-exports.spec.js', 'testObject', '--asd'])).stdout
-	t.is(stdout, '{ asd: true }')
-})
+  const file = 'multiple-exports';
+	const testArgs = ['testObject', '--asd'];
+	const expectedOutput = '{ asd: true }';
+
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
+});
 
 test('work with func export (object args as array)', async t => {
-	const stdout = (await execa('node', ['./testfiles/export.spec.js', 'test', '--asd'])).stdout
-	t.is(stdout, '[ { asd: true } ]')
-})
+	const file = 'export';
+	const testArgs = ['test', '--asd'];
+	const expectedOutput = '[ { asd: true } ]';
+
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
+});
 
 test('nested runnable-exports', async t => {
-	const stdout = (await execa('node', ['./testfiles/nested.spec.js', 'test', '--asd'])).stdout
-	t.is(stdout, 'cache deleted')
-})
+	const file = 'nested';
+	const testArgs = ['test', '--asd'];
+	const expectedOutput = 'cache deleted';
+
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
+});
 
 test('Function args are not passed as an array', async t => {
+	const file = 'multiple-exports';
 	const functionName = 'otherFunction';
 	const functionArgs = ['foo', 'bar', 'baz'];
-	const stdout = (await execa('node', ['./testfiles/multiple-exports.spec.js', 'otherFunction', ...functionArgs])).stdout
+	const testArgs = [functionName, ...functionArgs];
+	const expectedOutput = 'Inserting bar at index foo with type baz';
 
-	t.is(stdout, 'Inserting bar at index foo with type baz');
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
 });
 
 
 test('Function args can be combined into array', async t => {
-	const stdout = (await execa('node', ['./testfiles/multiple-exports.spec.js', 'testFunction', 'arg1', 'arg2', 'arg3', 'arg4'])).stdout;
-	t.is(stdout, '4 arguments entered.');
+	const file = 'multiple-exports';
+	const testArgs = ['testFunction', 'arg1', 'arg2', 'arg3', 'arg4'];
+	const expectedOutput = '4 arguments entered.';
+
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
 });
 
 test('Function can count array of 0 args', async t => {
-	const stdout = (await execa('node', ['./testfiles/multiple-exports.spec.js', 'testFunction'])).stdout;
-	t.is(stdout, '0 arguments entered.');
+	const file = 'multiple-exports';
+	const expectedOutput = '0 arguments entered.';
+	const testArgs = ['testFunction'];
+
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
 });
 
 test('Function can count array with 1 arg', async t => {
-	const stdout = (await execa('node', ['./testfiles/multiple-exports.spec.js', 'testFunction', 'arg'])).stdout;
-	t.is(stdout, '1 arguments entered.');
+	const file = 'multiple-exports';
+	const expectedOutput = '1 arguments entered.';
+	const testArgs = ['testFunction', 'arg'];
+
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
 });
 
 test('Function can handle both object and array args', async t => {
-	const stdout = (await execa('node', ['./testfiles/both-arg-types.spec.js', 'test', 'otherArg', '--objArg'])).stdout;
+	const file = 'both-arg-types';
 	const expectedOutput = '{ objArg: true } [ \'otherArg\' ]';
-	t.is(stdout, expectedOutput);
-})
+	const testArgs = ['test', 'otherArg', '--objArg'];
+
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
+});
