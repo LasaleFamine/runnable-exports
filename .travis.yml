@@ -2,6 +2,6 @@ sudo: false
 language: node_js
 node_js:
   - 'node'
-  - '6'
+  - '7'
 script:
   - xo && nyc ava && nyc report --reporter=text-lcov | coveralls

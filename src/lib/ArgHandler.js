@@ -38,14 +38,12 @@ class ArgHandler {
 
 	getAllArgs() {
 		const args = [];
-
 		if (this.hasObjectArgs()) {
 			args.push(this.objectArgs);
 		}
 		if (this.hasArrayArgs()) {
 			args.push(...this.arrayArgs);
 		}
-
 		return args;
 	}
 
