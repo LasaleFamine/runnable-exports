@@ -22,18 +22,11 @@ const checkSuccess = async (t, expectedOutput, ...execArgs) => {
 	t.is(output, expectedOutput);
 };
 
-test('throw with no exported func calling only the file', async t => {
-	const file = 'noexport';
-	const suggestion = 'Module doesn\'t export any functions';
-	await checkError(t, [generalErrorMessage, suggestion], file);
-});
+test('throw with no exported func calling only the file', checkError,
+	[generalErrorMessage, 'Module doesn\'t export any functions'], 'noexport', []);
 
-test('works with default exported func calling with double type args', async t => {
-	const file = 'defaultexport';
-	const testArgs = ['asd', '--asd'];
-	const expectedOutput = `[ { asd: true }, 'asd' ]`;
-	await checkSuccess(t, expectedOutput, file, ...testArgs);
-});
+test('works with default exported func calling with double type args', checkSuccess,
+	`[ { asd: true }, 'asd' ]`, 'defaultexport', 'asd', '--asd');
 
 test('throw with exported func calling with a wrong name', async t => {
 	const file = 'export';
