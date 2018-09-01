@@ -14,19 +14,25 @@
     "report": "nyc report --reporter=html",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
+  "ava": {
+    "files": [
+      "tests/*.js",
+      "!tests/testfiles/*.spec.js"
+    ]
+  },
   "xo": {
     "semicolon": true,
     "rules": {
-        "comma-dangle": 0,
-        "no-else-return": 0,
-        "unicorn/filename-case": 0
+      "comma-dangle": 0,
+      "no-else-return": 0,
+      "unicorn/filename-case": 0
     },
     "envs": [
       "node"
     ],
     "ignores": [
-      "test.js",
-      "testfiles/*.spec.js"
+      "tests/test.js",
+      "tests/testfiles/*.spec.js"
     ]
   },
   "keywords": [

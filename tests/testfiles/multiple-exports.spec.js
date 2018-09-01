@@ -1,4 +1,4 @@
-const runnableExports = require('./../src/index.js');
+const runnableExports = require('../../src/index.js');
 
 const PI = 3;
 const variable = "my variable";

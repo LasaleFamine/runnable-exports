@@ -1,7 +1,7 @@
 import test from 'ava';
 import execa from 'execa';
 
-const testfileDir = './testfiles';
+const testfileDir = './tests/testfiles';
 const testfileExtension = '.spec.js';
 const generalErrorMessage = 'Error: RUNNABLE-EXPORTS: can\'t run your command: ';
 
@@ -46,11 +46,12 @@ test('works with exported func calling with double type args', async t => {
 })
 
 test('throw with func calling wrong name suggests valid function names', async t => {
-	const error = await t.throws(execa('node', ['./testfiles/multiple-exports.spec.js', 'noFunction']));
-	const message = `Error: RUNNABLE-EXPORTS: can't run your command: noFunction`;
+	const file = 'multiple-exports';
+	const testArgs = ['noFunction'];
+	const errorMessage = `Error: RUNNABLE-EXPORTS: can't run your command: noFunction`;
 	const suggestions = `Perhaps you meant one of the following: testFunction, otherFunction, testObject`;
-	t.true(error.stderr.includes(message));
-	t.true(error.stderr.includes(suggestions));
+
+	await checkError(t, [errorMessage, suggestions], file, ...testArgs);
 })
 
 test('work with default export (no-args)', async t => {
