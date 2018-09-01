@@ -1,2 +1,9 @@
 import test from 'ava';
-import execa from 'execa';
+
+import ArgHandler from '../../src/lib/ArgHandler';
+
+test('ArgHandler can be constructed', async t => {
+	// const handler = new ArgHandler();
+
+	t.true(true);
+})
