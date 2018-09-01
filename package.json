@@ -16,8 +16,8 @@
   },
   "ava": {
     "files": [
-      "tests/*.js",
-      "!tests/testfiles/*.spec.js"
+      "tests/*.spec.js",
+      "!tests/testfiles/*.js"
     ]
   },
   "xo": {
@@ -31,8 +31,7 @@
       "node"
     ],
     "ignores": [
-      "tests/test.js",
-      "tests/testfiles/*.spec.js"
+      "tests/**/*.js"
     ]
   },
   "keywords": [

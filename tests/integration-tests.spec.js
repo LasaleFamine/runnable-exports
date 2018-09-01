@@ -1,26 +1,7 @@
 import test from 'ava';
-import execa from 'execa';
+import { checkError, checkSuccess } from './utils/utils';
 
-const testfileDir = './tests/testfiles';
-const testfileExtension = '.spec.js';
 const generalErrorMessage = 'Error: RUNNABLE-EXPORTS: can\'t run your command: ';
-
-const exec = async (filename, ...args) => {
-	const filepath = `${testfileDir}/${filename}${testfileExtension}`;
-	return execa('node', [filepath, ...args]);
-};
-
-const checkError = async (t, stringsToCheck, ...execArgs) => {
-	const error = (await t.throws(exec(...execArgs))).stderr;
-	for (const string in stringsToCheck) {
-		t.true(error.includes(string));
-	}
-}
-
-const checkSuccess = async (t, expectedOutput, ...execArgs) => {
-	const output = (await exec(...execArgs)).stdout;
-	t.is(output, expectedOutput);
-};
 
 test('throw with no exported func calling only the file', checkError,
 	[generalErrorMessage, 'Module doesn\'t export any functions'], 'noexport', []);
@@ -35,15 +16,15 @@ test('throw with exported func calling with a wrong name', async t => {
 	const suggestion = 'Perhaps you meant: test';
 
 	await checkError(t, [errorMessage, suggestion], file, ...testArgs);
-})
+});
 
 test('works with exported func calling with double type args', async t => {
-  const file = 'export';
-  const testArgs = ['test', 'asdasd', '--asd'];
-  const expectedOutput = `[ { asd: true }, 'asdasd' ]`;
+	const file = 'export';
+	const testArgs = ['test', 'asdasd', '--asd'];
+	const expectedOutput = `[ { asd: true }, 'asdasd' ]`;
 
-  await checkSuccess(t, expectedOutput, file, ...testArgs);
-})
+	await checkSuccess(t, expectedOutput, file, ...testArgs);
+});
 
 test('throw with func calling wrong name suggests valid function names', async t => {
 	const file = 'multiple-exports';
@@ -52,7 +33,7 @@ test('throw with func calling wrong name suggests valid function names', async t
 	const suggestions = `Perhaps you meant one of the following: testFunction, otherFunction, testObject`;
 
 	await checkError(t, [errorMessage, suggestions], file, ...testArgs);
-})
+});
 
 test('work with default export (no-args)', async t => {
 	const file = 'defaultexport';
@@ -95,7 +76,7 @@ test('work with func export (normal args)', async t => {
 });
 
 test('work with func export (object args)', async t => {
-  const file = 'multiple-exports';
+	const file = 'multiple-exports';
 	const testArgs = ['testObject', '--asd'];
 	const expectedOutput = '{ asd: true }';
 
@@ -127,7 +108,6 @@ test('Function args are not passed as an array', async t => {
 
 	await checkSuccess(t, expectedOutput, file, ...testArgs);
 });
-
 
 test('Function args can be combined into array', async t => {
 	const file = 'multiple-exports';
