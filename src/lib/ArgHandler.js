@@ -2,7 +2,7 @@ const autoBind = require('auto-bind');
 const utils = require('./utils');
 
 class ArgHandler {
-	constructor(inputArgs, isCallingDefaultFunction) {
+	constructor(inputArgs, isCallingDefaultFunction = false) {
 		autoBind(this);
 		this.splitArgs(inputArgs, isCallingDefaultFunction);
 	}
@@ -20,7 +20,7 @@ class ArgHandler {
 			this.functionName = functionName;
 			this.arrayArgs = actualArgs;
 		} else {
-			this.arrayArgs = args;
+			this.arrayArgs = args ? args : [];
 		}
 	}
 
