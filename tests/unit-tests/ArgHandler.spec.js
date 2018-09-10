@@ -3,13 +3,17 @@ import test from 'ava';
 import ArgHandler from '../../src/lib/ArgHandler';
 
 test.beforeEach(t => {
-	t.context.handler = new ArgHandler({});
 	t.context.arrayArgs = [1, true, 'foobar', 2, 3];
 	t.context.functionName = 'myFunc';
 	t.context.arrayArgsWithFunctionName = [t.context.functionName, ...t.context.arrayArgs];
 	t.context.objectArgs = { foo: 'bar', int: 3, bool: false };
 	t.context.arrayArgObject = {_: t.context.arrayArgs};
 	t.context.bothArgObject = Object.assign({_: t.context.arrayArgs}, t.context.objectArgs);
+
+	t.context.handler = new ArgHandler({});
+	t.context.arrayHandler = new ArgHandler(t.context.arrayArgObject);
+	t.context.objectHandler = new ArgHandler(t.context.objectArgs);
+	t.context.bothHandler = new ArgHandler(t.context.bothArgObject);
 
 	t.context.returnFirstArg = (firstArg) => firstArg;
 });
@@ -19,15 +23,12 @@ test('ArgHandler can be constructed', async t => {
 });
 
 test('ArgHandler.splitArgs parses array args', async t => {
-	t.context.handler.splitArgs({_: t.context.arrayArgs});
+	t.context.handler.splitArgs(t.context.arrayArgObject);
 
 	t.is(t.context.handler.arrayArgs, t.context.arrayArgs);
 });
 
 test('ArgHandler.splitArgs parses object args', async t => {
-  const objectArgs = { foo: 'bar', int: 3, bool: false };
-	const handler = new ArgHandler({});
-
 	t.context.handler.splitArgs(t.context.objectArgs);
 
 	t.is(JSON.stringify(t.context.handler.objectArgs), JSON.stringify(t.context.objectArgs));
@@ -57,13 +58,11 @@ test('ArgHandler.resolveArrayArgs handles first arg not being a function name', 
 });
 
 test('ArgHandler.hasArrayArgs returns true when there are array args', async t => {
-	const handler = new ArgHandler(t.context.arrayArgObject);
-	t.is(handler.hasArrayArgs(), true);
+	t.is(t.context.arrayHandler.hasArrayArgs(), true);
 });
 
 test('ArgHandler.hasArrayArgs returns false when there are no array args', async t => {
-	const  handler = new ArgHandler(t.context.objectArgs);
-	t.is(handler.hasArrayArgs(), false);
+	t.is(t.context.objectHandler.hasArrayArgs(), false);
 });
 
 test('ArgHandler.hasArrayArgs returns false when initialised with an empty args object', async t => {
@@ -71,15 +70,11 @@ test('ArgHandler.hasArrayArgs returns false when initialised with an empty args 
 })
 
 test('ArgHandler.hasObjectArgs returns true when there are object arguments', async t => {
-  const handler = new ArgHandler(t.context.objectArgs);
-
-	t.is(handler.hasObjectArgs(), true);
+	t.is(t.context.objectHandler.hasObjectArgs(), true);
 });
 
 test('ArgHandler.hasObjectArgs returns false when there are no object arguments', async t => {
-	const handler = new ArgHandler(t.context.arrayArgObject);
-
-	t.is(handler.hasObjectArgs(), false);
+	t.is(t.context.arrayHandler.hasObjectArgs(), false);
 });
 
 test('ArgHandler.hasObjectArgs returns false when initialised with an empty args object', async t => {
@@ -87,20 +82,15 @@ test('ArgHandler.hasObjectArgs returns false when initialised with an empty args
 });
 
 test('ArgHandler.hasBothTypesOfArg returns true when both types of arg are present', async t => {
-  const handler = new ArgHandler(t.context.bothArgObject);
-
-	t.is(handler.hasBothTypesOfArg(), true);
+	t.is(t.context.bothHandler.hasBothTypesOfArg(), true);
 });
 
 test('ArgHandler.hasBothTypesOfArg returns false with only array args', async t => {
-	const handler = new ArgHandler(t.context.arrayArgObject);
-
-	t.is(handler.hasBothTypesOfArg(), false);
+	t.is(t.context.arrayHandler.hasBothTypesOfArg(), false);
 });
 
 test('ArgHandler.hasBothTypesOfArg returns false with only object args', async t => {
-	const handler = new ArgHandler(t.context.objectArgs);
-	t.is(handler.hasBothTypesOfArg(), false);
+	t.is(t.context.objectHandler.hasBothTypesOfArg(), false);
 });
 
 test('ArgHandler.hasBothTypesOfArg returns false when initialised with an empty args object', async t => {
@@ -112,24 +102,21 @@ test('ArgHandler.getAllArgs returns an empty array with no args', async t => {
 });
 
 test('ArgHandler.getAllArgs handles array args', async t => {
-	const handler = new ArgHandler(t.context.arrayArgObject);
-	const allArgs = handler.getAllArgs();
+	const allArgs = t.context.arrayHandler.getAllArgs();
 
 	t.is(allArgs.length, t.context.arrayArgs.length);
 	t.is(JSON.stringify(allArgs), JSON.stringify(t.context.arrayArgs));
 });
 
 test('ArgHandler.getAllArgs handles object args', async t => {
-	const handler = new ArgHandler(t.context.objectArgs);
-	const allArgs = handler.getAllArgs();
+	const allArgs = t.context.objectHandler.getAllArgs();
 
 	t.is(allArgs.length, 1);
 	t.is(JSON.stringify(allArgs[0]), JSON.stringify(t.context.objectArgs));
 });
 
 test('ArgHandler.getAllArgs handles both arg types', async t => {
-  const handler = new ArgHandler(t.context.bothArgObject);
-	const allArgs = handler.getAllArgs();
+	const allArgs = t.context.bothHandler.getAllArgs();
 	const lengthOfAllArgs = t.context.arrayArgs.length + 1;
 	const [objectArgs, ...arrayArgs] = allArgs;
 
@@ -145,28 +132,25 @@ test('runWithArgs handles an empty object', async t => {
 });
 
 test('ArgHandler.runWithArgs handles object args', async t => {
-	const handler = new ArgHandler(t.context.objectArgs);
-  const argReturned = handler.runWithArgs(t.context.returnFirstArg);
+  const argReturned = t.context.objectHandler.runWithArgs(t.context.returnFirstArg);
 	t.is(JSON.stringify(argReturned), JSON.stringify(t.context.objectArgs));
 });
 
 test('ArgHandler.runWithArgs handles array args', async t => {
-	const handler = new ArgHandler(t.context.arrayArgObject);
-
 	const myFunc = (...args) => {
 		t.is(args.length, t.context.arrayArgs.length);
 		t.is(JSON.stringify(args), JSON.stringify(t.context.arrayArgs));
 	};
-	handler.runWithArgs(myFunc);
+
+	t.context.arrayHandler.runWithArgs(myFunc);
 });
 
 test('ArgHandler.runWithArgs handles both kinds of args', async t => {
-	const handler = new ArgHandler(t.context.bothArgObject);
 	const myFunc = (objectArg, ...arrayArgs) => {
 		t.is(arrayArgs.length, t.context.arrayArgs.length);
 		t.is(JSON.stringify(objectArg), JSON.stringify(t.context.objectArgs));
 		t.is(JSON.stringify(arrayArgs), JSON.stringify(t.context.arrayArgs));
 	};
 
-	handler.runWithArgs(myFunc);
+	t.context.bothHandler.runWithArgs(myFunc);
 });
