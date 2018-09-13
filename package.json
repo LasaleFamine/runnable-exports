@@ -7,18 +7,31 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "test": "xo && nyc ava",
+    "lint": "xo",
+    "pretest": "npm run lint",
+    "test": "npm run test-only",
+    "test-only": "nyc ava",
     "report": "nyc report --reporter=html",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
+  "ava": {
+    "files": [
+      "tests/**/*.spec.js",
+      "!tests/testfiles/*.js"
+    ]
+  },
   "xo": {
-    "semicolon": false,
+    "semicolon": true,
+    "rules": {
+      "comma-dangle": 0,
+      "no-else-return": 0,
+      "unicorn/filename-case": 0
+    },
     "envs": [
       "node"
     ],
     "ignores": [
-      "test.js",
-      "testfiles/*.spec.js"
+      "tests/**/*.js"
     ]
   },
   "keywords": [
@@ -46,6 +59,7 @@
     "xo": "^0.17.1"
   },
   "dependencies": {
+    "auto-bind": "^1.2.1",
     "yargs": "^6.6.0"
   }
 }
