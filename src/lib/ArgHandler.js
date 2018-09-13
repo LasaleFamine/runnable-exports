@@ -8,7 +8,7 @@ class ArgHandler {
 	}
 
 	splitArgs(inputArgs, firstArgIsFunctionName) {
-		let {$0: _, _: arrayArgs, ...objectArgs} = inputArgs;
+		const {$0: _, _: arrayArgs, ...objectArgs} = inputArgs;
 
 		this.resolveArrayArgs(arrayArgs, firstArgIsFunctionName);
 		this.objectArgs = objectArgs;

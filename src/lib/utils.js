@@ -10,7 +10,7 @@ const isExecutable = (targetFunc, parentExports) => {
 
 const getFunctionNames = object => {
 	const objectFunctionNames = Object.keys(object).filter(key => {
-		let objectProperty = object[key];
+		const objectProperty = object[key];
 		return isFunc(objectProperty);
 	});
 
@@ -19,13 +19,13 @@ const getFunctionNames = object => {
 
 const generateSuggestion = functionNames => {
 	let suggestion = '';
-	let functionListString = functionNames.join(', ');
+	const functionListString = functionNames.join(', ');
 	if (functionNames.length > 1) {
 		suggestion = `Perhaps you meant one of the following: ${functionListString}`;
 	} else if (functionNames.length === 1) {
 		suggestion = `Perhaps you meant: ${functionListString}`;
 	} else {
-		suggestion = `Module doesn't export any functions`;
+		suggestion = 'Module doesn\'t export any functions';
 	}
 	return suggestion;
 };

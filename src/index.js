@@ -1,9 +1,9 @@
-const argv = require('yargs').argv;
+const {argv} = require('yargs');
 const ArgHandler = require('./lib/ArgHandler');
 const utils = require('./lib/utils');
 
 const main = () => {
-	const parent = module.parent;
+	const {parent} = module;
 
 	// Check for others `runnable-exports`
 	if (require.main !== parent) {
@@ -29,9 +29,9 @@ const main = () => {
 	if (isExecutable) {
 		return argHandler.runWithArgs(targetFunc);
 	} else {
-		let executableFunctions = utils.getFunctionNames(parentExports);
-		let suggestionString = utils.generateSuggestion(executableFunctions);
-		let errorMessage = `RUNNABLE-EXPORTS: can't run your command: ${functionName} \n${suggestionString}`;
+		const executableFunctions = utils.getFunctionNames(parentExports);
+		const suggestionString = utils.generateSuggestion(executableFunctions);
+		const errorMessage = `RUNNABLE-EXPORTS: can't run your command: ${functionName} \n${suggestionString}`;
 		throw new Error(errorMessage);
 	}
 };
